@@ -1,23 +1,22 @@
 const express = require("express");
-const app = express();
+const mongoose = require("mongoose");
 const cors = require("cors");
+
 require("dotenv").config({ path: "./config.env" });
 const port = process.env.PORT || 5000;
-app.use(cors());
-app.use(express.json());
+const mongoUrl = process.env.ATLAS_URI;
 
-// app.use(require("./app/routes/record"));
-app.use(require("./app/routes/main"));
-app.use(require("./app/routes/user.routes"));
-app.use(require("./app/routes/auth.routes"));
+const routes = require("./app/routes"); //
 
-// get driver connection
-const dbo = require("./app/db/conn");
+mongoose.connect(mongoUrl, { useNewUrlParser: true }).then(() => {
+  const app = express();
+  app.use(cors());
+  app.use(express.json());
 
-app.listen(port, () => {
-  // perform a database connection when server starts
-  dbo.connectToServer(function (err) {
-    if (err) console.error(err);
+  app.use("/api", routes);
+
+  app.listen(port, () => {
+    console.log("Server has started!");
+    console.log(`Hosted on port ${port}`);
   });
-  console.log(`Server is running on port: ${port}`);
 });

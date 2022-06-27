@@ -1,15 +1,42 @@
-exports.allAccess = (req, res) => {
-  res.status(200).send("Public Content.");
+const User = require("../models/user.model");
+
+exports.fetchAll = async (req, res) => {
+  const users = await User.find();
+  res.status(200).send(users);
 };
 
-exports.userBoard = (req, res) => {
-  res.status(200).send("User Content.");
+exports.fetchById = async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.id });
+    res.send(user);
+  } catch (error) {
+    res.status(404);
+    res.send({ error: "User doesn't exist!" });
+  }
 };
 
-exports.adminBoard = (req, res) => {
-  res.status(200).send("Admin Content.");
+exports.updateById = async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.id });
+
+    if (req.body.username) {
+      user.username = req.body.username;
+    }
+
+    await user.save();
+    res.send(user);
+  } catch {
+    res.status(404);
+    res.send({ error: "User doesn't exist!" });
+  }
 };
 
-exports.moderatorBoard = (req, res) => {
-  res.status(200).send("Moderator Content.");
+exports.deleteById = async (req, res) => {
+  try {
+    await User.deleteOne({ _id: req.params.id });
+    res.status(204).send();
+  } catch {
+    res.status(404);
+    res.send({ error: "User doesn't exist!" });
+  }
 };
