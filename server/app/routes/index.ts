@@ -1,3 +1,4 @@
 import user from "./user.routes";
+import auth from "./auth.routes";
 
-export default [user];
+export default [user, auth];
