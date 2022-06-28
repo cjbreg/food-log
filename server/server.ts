@@ -1,17 +1,16 @@
-import express from "express";
+import express, { Express } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import routes from "./app/routes";
 
 dotenv.config({ path: "./config.env" });
 
 const port = process.env.PORT || 5000;
 const mongoUrl = process.env.ATLAS_URI || "";
 
-const routes = require("./app/routes");
-
 mongoose.connect(mongoUrl, {}).then(() => {
-  const app = express();
+  const app: Express = express();
   app.use(cors());
   app.use(express.json());
 
