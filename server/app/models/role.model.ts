@@ -1,28 +1,14 @@
-import mongoose from "mongoose";
+import  { Document, model, Schema } from "mongoose";
 
-interface IRole {
+interface IRole extends Document {
   name: string;
 }
 
-interface RoleDoc extends mongoose.Document {
-  name: string;
-}
-
-interface RoleModelInterface extends mongoose.Model<RoleDoc> {
-  build(attr: IRole): RoleDoc;
-}
-
-const roleSchema = new mongoose.Schema({
+const roleSchema: Schema = new Schema({
   name: {
     type: String,
     required: true,
   },
 });
 
-roleSchema.statics.build = (attr: IRole) => {
-  return new Role(attr);
-};
-
-const Role = mongoose.model<RoleDoc, RoleModelInterface>("Role", roleSchema);
-
-export default { Role };
+export default model<IRole>("Role", roleSchema);
