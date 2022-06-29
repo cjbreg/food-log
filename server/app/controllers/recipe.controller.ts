@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
+import { userInfo } from "os";
 import Recipe from "../models/recipe.model";
 
 interface RecipeInterface {
   fetchAll(req: Request, res: Response): Promise<void>;
   fetchById(req: Request, res: Response): Promise<void>;
   saveRecipe(req: Request, res: Response): Promise<void>;
+  updateRecipe(req: Request, res: Response): Promise<void>;
+  updateRecipe(req: Request, res: Response): Promise<void>;
 }
 
 class RecipeController implements RecipeInterface {
@@ -33,29 +36,30 @@ class RecipeController implements RecipeInterface {
 
   saveRecipe = async (req: Request, res: Response): Promise<void> => {
     try {
-      const { user } = req.body;
-
-      const recipe = new Recipe({
-        user: user.id,
-        name: req.body.name,
-        originalSource: req.body.originalSource,
-        createdAt: Date.now(),
-      });
-
-      recipe.save((err, recipe) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        res.send({
-          message: `Recipe ${recipe.name} was registered successfully!`,
-        });
-      });
     } catch (error) {
       res.status(500).send({ error: "Something went wrong, try again later." });
     }
   };
+
+  updateRecipe = async (req: Request, res: Response) => {
+    try {
+      const recipeId = req.params.id;
+
+      // Update Recipe
+      await Recipe.findByIdAndUpdate(recipeId, {
+        name: req.body.name,
+      });
+
+      // Return updated Recipe
+      const recipe = await Recipe.findById(req.params.id).populate("user");
+      if (!recipe) throw new Error();
+      res.send(recipe);
+    } catch (error) {
+      res.status(404).send({ error: "Recipe doesn't exist!" });
+    }
+  };
+
+  deleteRecipe = async (req: Request, res: Response) => {};
 }
 
 export default RecipeController;

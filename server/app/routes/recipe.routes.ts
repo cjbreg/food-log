@@ -33,4 +33,12 @@ router.post("/recipe", async (req: Request, res: Response) => {
   }
 });
 
+router.put("/recipe/:id", async (req: Request, res: Response) => {
+  try {
+    controller.updateRecipe(req, res);
+  } catch (error: any) {
+    console.error(error.message);
+  }
+});
+
 export default router;
