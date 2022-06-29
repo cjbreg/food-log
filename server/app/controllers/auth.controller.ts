@@ -85,7 +85,8 @@ class AuthController implements AuthInterface {
   };
 
   signout = async (req: Request, res: Response): Promise<void> => {
-    res.json({ message: "This is the signout route!" });
+    res.status(200).send({ message: "You've been signed out!" });
+    return;
   };
 }
 
