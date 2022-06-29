@@ -71,7 +71,10 @@ class AuthController implements AuthInterface {
 
       const secretKey = process.env.SECRET_KEY || "";
 
-      var accessToken = jwt.sign({ id: user.id }, secretKey);
+      var accessToken = jwt.sign(
+        { id: user.id, username: user.username },
+        secretKey
+      );
 
       res.json({
         username,
