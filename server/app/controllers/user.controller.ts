@@ -4,6 +4,7 @@ import User from "../models/user.model";
 interface UserInterface {
   fetchAll(req: Request, res: Response): Promise<void>;
   fetchById(req: Request, res: Response): Promise<void>;
+  fetchUser(req: Request, res: Response): Promise<void>;
   updateById(req: Request, res: Response): Promise<void>;
   deleteById(req: Request, res: Response): Promise<void>;
 }
@@ -19,6 +20,17 @@ class UserController implements UserInterface {
   fetchById = async (req: Request, res: Response): Promise<void> => {
     try {
       const user = await User.findOne({ _id: req.params.id });
+      if (!user) throw new Error();
+      res.send(user);
+    } catch (error: any) {
+      res.status(404).send({ error: "User doesn't exist!" });
+    }
+  };
+
+  fetchUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const user = await User.findOne({ _id: req.body.user.id });
+      if (!user) throw new Error();
       res.send(user);
     } catch (error) {
       res.status(404).send({ error: "User doesn't exist!" });
@@ -28,6 +40,7 @@ class UserController implements UserInterface {
   updateById = async (req: Request, res: Response): Promise<void> => {
     try {
       const user = await User.findOne({ _id: req.params.id });
+      if (!user) throw new Error("User doesn't exist!");
 
       if (req.body.username) {
         user!.username = req.body.username;

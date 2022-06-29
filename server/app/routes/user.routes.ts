@@ -7,7 +7,7 @@ const controller = new UserController();
 
 router.get("/user", authenticateJWT, async (req: Request, res: Response) => {
   try {
-    controller.fetchAll(req, res);
+    controller.fetchUser(req, res);
   } catch (error: any) {
     console.error(error.message);
   }
