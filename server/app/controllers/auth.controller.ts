@@ -78,6 +78,7 @@ class AuthController implements AuthInterface {
 
       res.json({
         username,
+        email: user.email,
         userID: user.id,
         accessToken,
       });
