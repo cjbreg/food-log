@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
 import UserController from "../controllers/user.controller";
+import { authenticateJWT } from "../middleware/authJwt";
 
 const router = express.Router();
 const controller = new UserController();
 
-router.get("/user", async (req: Request, res: Response) => {
+router.get("/user", authenticateJWT, async (req: Request, res: Response) => {
   try {
     controller.fetchAll(req, res);
   } catch (error: any) {
