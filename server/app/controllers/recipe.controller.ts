@@ -42,6 +42,7 @@ class RecipeController implements RecipeInterface {
         name: req.body.name,
         originalSource: req.body.originalSource,
         ingredients: req.body.ingredients,
+        steps: req.body.steps,
         createdAt: Date.now(),
       });
 

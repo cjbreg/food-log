@@ -1,11 +1,13 @@
 import { Types, Schema, Document, model } from "mongoose";
 import { IIngredient, IngredientSchema } from "./ingredient.model";
+import { IStep, StepSchema } from "./step.model";
 
 export interface IRecipe extends Document {
   user: Types.ObjectId;
   name: string;
   originalSource: string;
   ingredients: IIngredient[];
+  steps: IStep[];
   createdAt: Date;
 }
 
@@ -19,6 +21,13 @@ const RecipeSchema: Schema = new Schema({
   ingredients: [
     {
       type: IngredientSchema,
+      required: false,
+    },
+  ],
+  steps: [
+    {
+      type: StepSchema,
+      required: false,
     },
   ],
   createdAt: { type: Date, required: true },
