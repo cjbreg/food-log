@@ -9,6 +9,7 @@ router.use("/recipe", authenticateJWT, (req, res, next) => {
   next();
 });
 
+// Get all recipes for user using Bearer token
 router.get("/recipe", async (req: Request, res: Response) => {
   try {
     controller.fetchAll(req, res);
@@ -17,6 +18,7 @@ router.get("/recipe", async (req: Request, res: Response) => {
   }
 });
 
+// Get recipe by id
 router.get("/recipe/:id", async (req: Request, res: Response) => {
   try {
     controller.fetchById(req, res);
@@ -25,6 +27,7 @@ router.get("/recipe/:id", async (req: Request, res: Response) => {
   }
 });
 
+// Post new recipe
 router.post("/recipe", async (req: Request, res: Response) => {
   try {
     controller.saveRecipe(req, res);
@@ -33,6 +36,7 @@ router.post("/recipe", async (req: Request, res: Response) => {
   }
 });
 
+// Update existing recipe
 router.put("/recipe/:id", async (req: Request, res: Response) => {
   try {
     controller.updateRecipe(req, res);
