@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { userInfo } from "os";
+import Ingredient, { IngredientSchema } from "../models/ingredient.model";
 import Recipe from "../models/recipe.model";
 
 interface RecipeInterface {
@@ -18,7 +19,7 @@ class RecipeController implements RecipeInterface {
       const { user } = req.body;
 
       const recipes = await Recipe.find({ userId: user.id });
-      res.status(200).send(recipes);
+      res.status(200).send({ data: recipes });
     } catch (error) {
       res.status(500).send({ error: "Something went wrong, try again later." });
     }
@@ -28,7 +29,7 @@ class RecipeController implements RecipeInterface {
     try {
       const recipe = await Recipe.findById(req.params.id).populate("user");
       if (!recipe) throw new Error();
-      res.send(recipe);
+      res.send({ data: recipe });
     } catch (error: any) {
       res.status(404).send({ error: "Recipe doesn't exist!" });
     }
@@ -36,6 +37,25 @@ class RecipeController implements RecipeInterface {
 
   saveRecipe = async (req: Request, res: Response): Promise<void> => {
     try {
+      const recipe = new Recipe({
+        user: req.body.user.id,
+        name: req.body.name,
+        originalSource: req.body.originalSource,
+        ingredients: req.body.ingredients,
+        createdAt: Date.now(),
+      });
+
+      recipe.save((err, recipe) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        }
+
+        res.send({
+          message: "Recipe was registered successfully!",
+          data: recipe,
+        });
+      });
     } catch (error) {
       res.status(500).send({ error: "Something went wrong, try again later." });
     }
@@ -53,7 +73,7 @@ class RecipeController implements RecipeInterface {
       // Return updated Recipe
       const recipe = await Recipe.findById(req.params.id).populate("user");
       if (!recipe) throw new Error();
-      res.send(recipe);
+      res.send({ message: "Recipe was successfully updated", data: recipe });
     } catch (error) {
       res.status(404).send({ error: "Recipe doesn't exist!" });
     }
