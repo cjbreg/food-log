@@ -5,6 +5,7 @@ import Recipe from "../models/recipe.model";
 
 interface RecipeInterface {
   fetchAll(req: Request, res: Response): Promise<void>;
+  fetchAllByUser(req: Request, res: Response): Promise<void>;
   fetchById(req: Request, res: Response): Promise<void>;
   saveRecipe(req: Request, res: Response): Promise<void>;
   updateRecipe(req: Request, res: Response): Promise<void>;
@@ -15,6 +16,15 @@ class RecipeController implements RecipeInterface {
   constructor() {}
 
   fetchAll = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const recipes = await Recipe.find({});
+      res.status(200).send({ data: recipes });
+    } catch (error) {
+      res.status(500).send({ error: "Something went wrong, try again later." });
+    }
+  };
+
+  fetchAllByUser = async (req: Request, res: Response): Promise<void> => {
     try {
       const { user } = req.body;
 

@@ -5,14 +5,23 @@ import { authenticateJWT } from "../middleware/authJwt";
 const router = express.Router();
 const controller = new RecipeController();
 
-router.use("/recipe", authenticateJWT, (req, res, next) => {
+router.use("/recipe", (req, res, next) => {
   next();
+});
+
+// Get all recipes for user using Bearer token
+router.get("/recipe/all", async (req: Request, res: Response) => {
+  try {
+    controller.fetchAll(req, res);
+  } catch (error: any) {
+    console.error(error.message);
+  }
 });
 
 // Get all recipes for user using Bearer token
 router.get("/recipe", async (req: Request, res: Response) => {
   try {
-    controller.fetchAll(req, res);
+    controller.fetchAllByUser(req, res);
   } catch (error: any) {
     console.error(error.message);
   }
